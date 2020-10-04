@@ -38,7 +38,7 @@ jobs:
         
     - name: Build amd64
       env:
-        DOCKERFILE_LOCATION: ./Dockerfile.amd64
+        DOCKERFILE_LOCATION: ./Dockerfile
       run: | 
         buildctl build --frontend dockerfile.v0 \
         --opt platform=linux/${PLATFORM_1} \
