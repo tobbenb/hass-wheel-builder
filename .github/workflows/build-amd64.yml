@@ -1,4 +1,4 @@
-name: Build Image
+name: Build amd64
 
 on:
   push:
@@ -42,3 +42,14 @@ jobs:
         --output type=docker,name=${REPO}:${DOCKER_TAG}-${PLATFORM_1} \
         --local dockerfile=. \
         --local context=. | docker load
+
+    - name: Export build artifact
+      run: |
+        mkdir -p /artifact
+        docker run --rm -v /artifact:/mnt tobbenb/hass-wheel-builder-test:latest-amd64
+
+    steps:
+    - uses: actions/upload-artifact@v2
+      with:
+      name: amd64
+      path: /artifact/wheel-repo-x86_64.tar.gz
