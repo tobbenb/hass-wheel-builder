@@ -47,9 +47,7 @@ jobs:
       run: |
         mkdir -p /artifact
         docker run --rm -v /artifact:/mnt tobbenb/hass-wheel-builder-test:latest-amd64
-  artifact:
 
-    steps:
     - uses: actions/upload-artifact@v2
       with:
         name: amd64
