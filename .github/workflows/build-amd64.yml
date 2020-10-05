@@ -1,0 +1,44 @@
+name: Build Image
+
+on:
+  push:
+    paths-ignore:
+      - 'README.md'
+  pull_request:
+    paths-ignore:
+      - 'README.md'
+
+jobs:
+  build:
+    
+    runs-on: ubuntu-latest
+    
+    env:
+      BUILDKIT_HOST: tcp://0.0.0.0:1234
+      DOCKER_CLI_EXPERIMENTAL: enabled
+      DOCKER_IMAGE: hass-wheel-builder
+      DOCKER_TAG: latest
+      PLATFORM_1: amd64
+      PLATFORM_2: arm
+      PLATFORM_3: arm64
+      REPO: tobbenb/hass-wheel-builder-test
+      
+    steps:
+    - uses: actions/checkout@v1
+    - name: Getting buildkit
+      run: |
+        sudo docker run --privileged linuxkit/binfmt:v0.7
+        sudo docker run -d --privileged -p 1234:1234 --name buildkit moby/buildkit:latest --addr tcp://0.0.0.0:1234 \
+        --oci-worker-platform linux/${PLATFORM_1}
+        sudo docker cp buildkit:/usr/bin/buildctl /usr/bin/
+        
+    - name: Build amd64
+      env:
+        DOCKERFILE_LOCATION: ./Dockerfile
+      run: | 
+        buildctl build --frontend dockerfile.v0 \
+        --opt platform=linux/${PLATFORM_1} \
+        --opt filename=./${DOCKERFILE_LOCATION} \
+        --output type=docker,name=${REPO}:${DOCKER_TAG}-${PLATFORM_1} \
+        --local dockerfile=. \
+        --local context=. | docker load
