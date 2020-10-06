@@ -45,10 +45,10 @@ jobs:
 
     - name: Export build artifact
       run: |
-        mkdir -p /artifact
+        mkdir -p ./artifact
         docker run --rm -v /artifact:/mnt tobbenb/hass-wheel-builder-test:latest-amd64
 
     - uses: actions/upload-artifact@v2
       with:
         name: amd64
-        path: /artifact/wheel-repo-x86_64.tar.gz
+        path: ./artifact/wheel-repo-x86_64.tar.gz
