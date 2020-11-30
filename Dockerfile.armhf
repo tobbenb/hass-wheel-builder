@@ -1,4 +1,4 @@
-FROM lsiobase/alpine:arm32v7-3.12
+FROM ghcr.io/linuxserver/baseimage-alpine:arm32v7-3.12 as buildstage
 
 # set version label
 ARG BUILD_DATE
@@ -106,7 +106,8 @@ RUN \
 		/tmp/repo && \
  mv /build/addons/* /tmp/repo/ && \
  mv /build/core/* /tmp/repo/ && \
- mv /build/hacs/* /tmp/repo/ && \
- tar zcf /tmp/wheel-repo-armhf.tar.gz /tmp/repo
+ mv /build/hacs/* /tmp/repo/
 
-CMD ["cp", "-avr", "/tmp/wheel-repo-armhf.tar.gz", "/mnt/"]
+FROM scratch
+
+COPY --from=buildstage /tmp/ /
