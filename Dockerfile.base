@@ -110,11 +110,12 @@ RUN \
 
 RUN \
  mkdir -p \
-    /tmp/repo && \
- mv /build/addons/* /tmp/repo/ && \
- mv /build/core/* /tmp/repo/ && \
- mv /build/hacs/* /tmp/repo/
+    /tmp/wheels && \
+ rm -rf /tmp/.cache /tmp/*.tar.gz && \
+ mv /build/addons/* /tmp/wheels/ && \
+ mv /build/core/* /tmp/wheels/ && \
+ mv /build/hacs/* /tmp/wheels/
 
 FROM scratch
 
-COPY --from=buildstage /tmp/repo /
+COPY --from=buildstage /tmp /tmp
