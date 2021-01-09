@@ -1,7 +1,7 @@
 FROM roxedus/playground:hass-base as base
-FROM ghcr.io/linuxserver/baseimage-alpine:arm32v7-3.12 as buildstage
+FROM ghcr.io/linuxserver/baseimage-ubuntu:arm32v7-focal as buildstage
 
-COPY --from=base /tmp /
+COPY --from=base /tmp /tmp
 
 
 # environment settings
@@ -11,41 +11,39 @@ ENV HOME="/tmp" PIPFLAGS="--find-links=/tmp/wheels --no-cache-dir --use-deprecat
 # https://github.com/home-assistant/core/blob/11d74124cd06f48c1faf68df9a2ab9034130fafa/azure-pipelines-wheels.yml#L32
 RUN \
  echo "**** install build packages ****" && \
- apk add --no-cache --virtual=build-dependencies \
+ apt-get update -q && \
+ apt-get install -y \
     autoconf \
-    bluez-deprecated \
-    bluez-dev \
-    build-base \
+    bluez \
+    build-essential \
     ca-certificates \
     cmake \
     curl \
     cython \
-    eudev-dev \
-    eudev-libs \
+    pkg-config \
     ffmpeg \
-    ffmpeg-dev \
     g++ \
     gcc \
     git \
-    glib-dev \
     jq \
+    libbluetooth-dev \
     libffi-dev \
-    libjpeg-turbo \
-    libjpeg-turbo-dev \
-    libstdc++ \
+    libjpeg-dev \
+    libjpeg-turbo8-dev \
+    libopenjp2-7 \
+    libssl-dev \
+    libtiff5 \
+    libudev-dev \
     libxml2-dev \
-    libxslt \
     libxslt-dev \
-    linux-headers \
+    libyaml-dev \
     make \
     openssl \
-    openssl-dev \
-    py3-pip \
-    py3-wheel \
-    python3 \
+    python3.8 \
     python3-dev \
-    sudo \
-    unzip
+    python3-pip \
+    unzip \
+    zlib1g-dev
 
 RUN \
  mkdir -p \
